@@ -2,27 +2,26 @@
 -compile(export_all).
 
 parse_transform(Forms, _Options) ->
-  erlang:display(Forms),
   ast_walk(Forms).
 
 ast_walk([H|T]) ->
   [ast_walk(H)|ast_walk(T)];
-ast_walk({function, _LN, greeting, 0, _Clauses}) ->
-  greeting_function("Foo~n");
+ast_walk({function, Line, greeting, 0, _Clauses}) ->
+  greeting_function(Line, "Foo~n");
 ast_walk(TopLevelThingy) ->
   TopLevelThingy.
 
-greeting_function(Value) ->
-  String = string(6, Value),
-  Clause = clause(6, [], [], [String]),
-  function(6, greeting, 0, [Clause]).
+greeting_function(Line, Value) ->
+  String = string(Line, Value),
+  Clause = clause(Line, [], [], [String]),
+  function(Line, greeting, 0, [Clause]).
 
-function(LN, Name, Arity, Clauses) ->
-  {function, LN, Name, Arity, Clauses}.
-clause(LN, Patterns, Guards, Bodies) ->
-    {clause, LN, Patterns, Guards, Bodies}.
-string(LN, Value) ->
-  {string, LN, Value}.
+function(Line, Name, Arity, Clauses) ->
+  {function, Line, Name, Arity, Clauses}.
+clause(Line, Patterns, Guards, Bodies) ->
+    {clause, Line, Patterns, Guards, Bodies}.
+string(Line, Value) ->
+  {string, Line, Value}.
 
 % [
 %   {attribute,1,file,{"./hello_world.erl",1}},
